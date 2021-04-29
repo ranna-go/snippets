@@ -27,6 +27,6 @@ jobs:
       - name: Build & Push
         uses: docker/build-push-action@v2
         with:
-          context: ranna-snippets
+          file: ranna-snippets/Dockerfile
           push: true
           tags: ghcr.io/ranna-go/snippets:latest
