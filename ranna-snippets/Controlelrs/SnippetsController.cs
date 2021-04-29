@@ -32,14 +32,14 @@ namespace ranna_snippets.Controlelrs
         }
 
         [HttpPost]
-        public async Task<ActionResult<Snippet>> Post([FromBody] Snippet snippet)
+        public async Task<ActionResult<Snippet>> Post([FromBody] SnippetRequest snippetIn)
         {
-            if (!snippet.Validate(out var errMsg)) 
-                return BadRequest(errMsg);
-
-            snippet.TimeStamp = DateTimeOffset.Now;
-            snippet.Id = Guid.NewGuid();
-            snippet.Ident = RandomUtil.GetString(6);
+            var snippet = new Snippet()
+            {
+                Language = snippetIn.Language,
+                Code = snippetIn.Code,
+                Ident = RandomUtil.GetString(6),
+            };
 
             db.Snippets.Add(snippet.Encode());
             await db.SaveChangesAsync();

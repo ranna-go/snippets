@@ -18,23 +18,6 @@ namespace ranna_snippets.Models
         public Snippet() : base()
         { }
 
-        public bool Validate(out string errMsg)
-        {
-            if (string.IsNullOrWhiteSpace(Language))
-            {
-                errMsg = "empty language";
-                return false;
-            }
-            if (string.IsNullOrEmpty(Code))
-            {
-                errMsg = "empty code";
-                return false;
-            }
-
-            errMsg = null;
-            return true;
-        }
-
         public Snippet Encode()
         {
             Code = Convert.ToBase64String(Encoding.UTF8.GetBytes(Code));
