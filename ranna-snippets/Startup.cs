@@ -20,11 +20,17 @@ namespace ranna_snippets
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddCors(cfg =>
+                cfg.AddDefaultPolicy(builder =>
+                    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+
             services.AddApiVersioning(cfg =>
             {
                 cfg.AssumeDefaultVersionWhenUnspecified = false;
                 cfg.ApiVersionReader = new UrlSegmentApiVersionReader();
             });
+
             services.AddDbContext<IContext, Context>(ctx => ctx.UseNpgsql(Configuration.GetConnectionString("postgresql")));
         }
 
@@ -36,15 +42,9 @@ namespace ranna_snippets
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(options =>
-            {
-                options
-                    .AllowAnyOrigin()
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
-            });
-
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseEndpoints(endpoints =>
             {

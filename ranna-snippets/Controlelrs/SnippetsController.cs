@@ -21,16 +21,6 @@ namespace ranna_snippets.Controlelrs
             db = _db;
         }
 
-        [HttpGet("{ident}")]
-        public async Task<ActionResult<Snippet>> Get([FromRoute] string ident)
-        {
-            var isGuid = Guid.TryParse(ident, out var guid);
-            var snippet = await db.Snippets.Where(s => s.Ident == ident || isGuid && s.Id == guid).FirstOrDefaultAsync();
-
-            if (snippet == null) return NotFound();
-            return snippet.Decode();
-        }
-
         [HttpPost]
         public async Task<ActionResult<Snippet>> Post([FromBody] SnippetRequest snippetIn)
         {
@@ -44,6 +34,16 @@ namespace ranna_snippets.Controlelrs
             db.Snippets.Add(snippet.Encode());
             await db.SaveChangesAsync();
 
+            return snippet.Decode();
+        }
+
+        [HttpGet("{ident}")]
+        public async Task<ActionResult<Snippet>> Get([FromRoute] string ident)
+        {
+            var isGuid = Guid.TryParse(ident, out var guid);
+            var snippet = await db.Snippets.Where(s => s.Ident == ident || isGuid && s.Id == guid).FirstOrDefaultAsync();
+
+            if (snippet == null) return NotFound();
             return snippet.Decode();
         }
     }
