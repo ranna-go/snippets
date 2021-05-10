@@ -13,6 +13,7 @@ namespace ranna_snippets.Database
     public interface IContext : IDisposable
     {
         DbSet<Snippet> Snippets { get; set; }
+        DbSet<User> Users { get; set; }
 
         DatabaseFacade Database { get; }
 

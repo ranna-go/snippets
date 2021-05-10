@@ -15,6 +15,8 @@ namespace ranna_snippets.Models
         [JsonPropertyName("code")]
         public string Code { get; set; }
 
+        public User Owner { get; set; }
+
         public Snippet() : base()
         { }
 

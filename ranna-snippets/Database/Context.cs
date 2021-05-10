@@ -6,6 +6,7 @@ namespace ranna_snippets.Database
     public class Context : DbContext, IContext
     {
         public DbSet<Snippet> Snippets { get; set; }
+        public DbSet<User> Users { get; set; }
 
         public Context(DbContextOptions options) : base(options)
         {

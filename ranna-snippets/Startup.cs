@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ranna_snippets.Authorization;
 using ranna_snippets.Database;
 
 namespace ranna_snippets
@@ -32,6 +33,12 @@ namespace ranna_snippets
             });
 
             services.AddDbContext<IContext, Context>(ctx => ctx.UseNpgsql(Configuration.GetConnectionString("postgresql")));
+
+            services
+                .AddSingleton<IHasher, Argon2Hasher>()
+                .AddTransient<IMasterTokenService, MasterTokenService>()
+                .AddSingleton<IApiTokenService, JwtApiTokenService>()
+            ;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
