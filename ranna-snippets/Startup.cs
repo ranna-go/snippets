@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ranna_snippets.Authorization;
 using ranna_snippets.Database;
+using System.Linq;
 
 namespace ranna_snippets
 {
@@ -24,7 +25,13 @@ namespace ranna_snippets
 
             services.AddCors(cfg =>
                 cfg.AddDefaultPolicy(builder =>
-                    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+                    builder
+                        .WithOrigins(
+                            Configuration.GetValue<string>("CORS:AllowedOrigins")
+                                .Split(",").ToList().Select(v => v.Trim()).ToArray())
+                        .AllowCredentials()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()));
 
             services.AddApiVersioning(cfg =>
             {
