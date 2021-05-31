@@ -35,7 +35,7 @@ namespace ranna_snippets
 
             services.AddApiVersioning(cfg =>
             {
-                cfg.AssumeDefaultVersionWhenUnspecified = false;
+                cfg.AssumeDefaultVersionWhenUnspecified = true;
                 cfg.ApiVersionReader = new UrlSegmentApiVersionReader();
             });
 
