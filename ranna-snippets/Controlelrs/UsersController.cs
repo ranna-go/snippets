@@ -70,6 +70,11 @@ namespace ranna_snippets.Controlelrs
             var user = await masterTokens.ValidateAsync(username, token);
             if (user == null) return Unauthorized();
 
+            var userLinks = await db.Snippets
+                .Where(s => s.Owner.Id == user.Id)
+                .ToListAsync();
+
+            db.RemoveRange(userLinks);
             db.Remove(user);
             await db.SaveChangesAsync();
 
