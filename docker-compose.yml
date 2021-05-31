@@ -1,4 +1,4 @@
-﻿version: "3.3"
+version: "3.3"
 
 volumes:
   postgres:
@@ -12,8 +12,9 @@ services:
     volumes:
       - "postgres:/var/lib/postgresql/data"
     environment:
-      POSTGRES_PASSWORD: "root"
-      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "dev"
+      POSTGRES_USER: "dev"
+      POSTGRES_DATABASE: "dev"
 
   pgadmin:
     image: "dpage/pgadmin4"
@@ -26,3 +27,14 @@ services:
       - "pgadmin:/var/lib/pgadmin"
     depends_on:
       - "postgres"
+
+  snippets:
+    build:
+      context: "."
+      dockerfile: "./ranna-snippets/Dockerfile"
+    image: "snippets"
+    environment:
+      CONNECTIONSTRINGS__POSTGRESQL: "Host=postgres;Username=dev;Password=dev;Database=dev"
+      CORS__ALLOWEDORIGINS: "http://localhost:5000,http://localhost:3000"
+    ports:
+      - "8080:8080"

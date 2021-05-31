@@ -378,3 +378,5 @@ obj/
 *.tlog
 
 *.Development.json
+
+.vscode/
