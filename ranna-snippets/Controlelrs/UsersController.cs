@@ -34,10 +34,18 @@ namespace ranna_snippets.Controlelrs
         public async Task<ActionResult<UserCreateResponse>> Create([FromRoute] string username)
         {
             if (!UserNameRX.IsMatch(username))
-                return BadRequest("invalid username pattern");
+                return BadRequest(new ErrorModel()
+                {
+                    Code = 400,
+                    Message = "Invalid username pattern"
+                });
 
             if (await db.Users.CountAsync(u => u.Username == username) > 0)
-                return BadRequest("username already exists");
+                return BadRequest(new ErrorModel()
+                {
+                    Code = 400,
+                    Message = "Username already exists"
+                });
 
             var (token, hash) = masterTokens.Generate();
 

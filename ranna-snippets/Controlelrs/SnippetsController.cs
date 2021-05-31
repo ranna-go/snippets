@@ -52,7 +52,12 @@ namespace ranna_snippets.Controlelrs
                 .Include(s => s.Owner)
                 .FirstOrDefaultAsync();
 
-            if (snippet == null) return NotFound();
+            if (snippet == null) 
+                return NotFound(new ErrorModel()
+                {
+                    Code = 404,
+                    Message = "Not Found"
+                });
             return snippet.Decode();
         }
 
@@ -85,7 +90,12 @@ namespace ranna_snippets.Controlelrs
                 .Where(s => s.Owner.Id == user.Id && s.Ident == ident || isGuid && s.Id == guid)
                 .FirstOrDefaultAsync();
 
-            if (snippet == null) return NotFound();
+            if (snippet == null)
+                return NotFound(new ErrorModel()
+                {
+                    Code = 404,
+                    Message = "Not Found"
+                });
 
             db.Remove(snippet);
             await db.SaveChangesAsync();
