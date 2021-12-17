@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ranna_snippets.Authorization;
 using ranna_snippets.Database;
+using System;
 using System.Linq;
 
 namespace ranna_snippets
@@ -21,6 +22,8 @@ namespace ranna_snippets
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
             services.AddControllers();
 
             services.AddCors(cfg =>

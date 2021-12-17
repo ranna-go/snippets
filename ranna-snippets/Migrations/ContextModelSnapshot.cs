@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ranna_snippets.Database;
 
+#nullable disable
+
 namespace ranna_snippets.Migrations
 {
     [DbContext(typeof(Context))]
@@ -15,9 +17,10 @@ namespace ranna_snippets.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 63)
                 .HasAnnotation("ProductVersion", "5.0.5")
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("ranna_snippets.Models.Snippet", b =>
                 {
@@ -44,7 +47,7 @@ namespace ranna_snippets.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Snippets");
+                    b.ToTable("Snippets", (string)null);
                 });
 
             modelBuilder.Entity("ranna_snippets.Models.User", b =>
@@ -67,7 +70,7 @@ namespace ranna_snippets.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("ranna_snippets.Models.Snippet", b =>
