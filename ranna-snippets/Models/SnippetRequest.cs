@@ -8,12 +8,14 @@ namespace ranna_snippets.Models
         [JsonPropertyName("language")]
         [MaxLength(50)]
         [RegularExpression(@"^[\w\-_:\.]+$")]
-        [Required]
         public string Language { get; set; }
 
         [JsonPropertyName("code")]
         [MaxLength(500_000)]
-        [Required]
         public string Code { get; set; }
+
+        [JsonPropertyName("displayname")]
+        [MaxLength(512)]
+        public string Displayname { get; set; }
     }
 }

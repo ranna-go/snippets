@@ -27,6 +27,11 @@ namespace ranna_snippets.Controlelrs
         [HttpPost]
         public async Task<ActionResult<Snippet>> Post([FromBody] SnippetRequest snippetIn)
         {
+            if (string.IsNullOrWhiteSpace(snippetIn.Language))
+                return BadRequest(new ErrorModel { Code = 400, Message = "Language must be specified" });
+            if (string.IsNullOrWhiteSpace(snippetIn.Code))
+                return BadRequest(new ErrorModel { Code = 400, Message = "Code must be specified" });
+
             var snippet = new Snippet()
             {
                 Language = snippetIn.Language,
@@ -40,24 +45,6 @@ namespace ranna_snippets.Controlelrs
             db.Snippets.Add(snippet.Encode());
             await db.SaveChangesAsync();
 
-            return snippet.Decode();
-        }
-
-        [HttpGet("{ident}")]
-        public async Task<ActionResult<Snippet>> Get([FromRoute] string ident)
-        {
-            var isGuid = Guid.TryParse(ident, out var guid);
-            var snippet = await db.Snippets
-                .Where(s => s.Ident == ident || isGuid && s.Id == guid)
-                .Include(s => s.Owner)
-                .FirstOrDefaultAsync();
-
-            if (snippet == null) 
-                return NotFound(new ErrorModel()
-                {
-                    Code = 404,
-                    Message = "Not Found"
-                });
             return snippet.Decode();
         }
 
@@ -75,6 +62,53 @@ namespace ranna_snippets.Controlelrs
                 .ToListAsync();
 
             return snippets;
+        }
+
+        [HttpGet("{ident}")]
+        public async Task<ActionResult<Snippet>> Get([FromRoute] string ident)
+        {
+            var isGuid = Guid.TryParse(ident, out var guid);
+            var snippet = await db.Snippets
+                .Where(s => s.Ident == ident || isGuid && s.Id == guid)
+                .Include(s => s.Owner)
+                .FirstOrDefaultAsync();
+
+            if (snippet == null)
+                return NotFound(new ErrorModel()
+                {
+                    Code = 404,
+                    Message = "Not Found"
+                });
+
+            return snippet.Decode();
+        }
+
+        [HttpPost("{ident}")]
+        public async Task<ActionResult<Snippet>> Update([FromRoute] string ident, [FromBody] SnippetRequest snippetIn)
+        {
+            var isGuid = Guid.TryParse(ident, out var guid);
+            var snippet = await db.Snippets
+                .Where(s => s.Ident == ident || isGuid && s.Id == guid)
+                .Include(s => s.Owner)
+                .FirstOrDefaultAsync();
+
+            if (snippet == null)
+                return NotFound(new ErrorModel()
+                {
+                    Code = 404,
+                    Message = "Not Found"
+                });
+
+            if (!string.IsNullOrWhiteSpace(snippetIn.Displayname))
+                snippet.Displayname = snippetIn.Displayname;
+
+            if (!string.IsNullOrWhiteSpace(snippetIn.Code))
+                snippet.Code = snippetIn.Code;
+
+            db.Update(snippet);
+            await db.SaveChangesAsync();
+
+            return snippet;
         }
 
         [HttpDelete("{ident}")]
